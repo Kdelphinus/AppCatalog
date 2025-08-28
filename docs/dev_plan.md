@@ -89,8 +89,8 @@ Nexus를 포괄적인 내부 미러 저장소로 구성하는 것은 프로젝�
 도메인 주도 설계를 따라 명확성과 유지보수성을 높인 계층형 아키텍처를 사용합니다.
 
 ```
-com.appcatalog.orchestrator
-├── OrchestratorApplication.java
+cmp.appcatalog
+├── AppcatalogApplication.java
 ├── config/                  // Spring Security, Async, Swagger 등 설정
 ├── error/                   // 전역 예외 처리, 커스텀 예외
 ├── catalog/                 // Nexus 연동 로직
@@ -149,7 +149,7 @@ API는 프론트엔드와 백엔드 간의 약속입니다.
 
 * **0단계: 환경 구축 (선행 조건)**
     * 4번 항목에 정의된 대로 Nexus 서버를 구축하고 리포지토리를 구성합니다.
-    * `pom.xml`, `.npmrc` 설정 방법을 포함한 개발 환경 가이드를 작성합니다.
+    * `gradle` 설정 방법을 포함한 개발 환경 가이드를 작성합니다.
 * **1단계: 최소 기능 제품 (MVP)**
     * 카탈로그 조회 및 VM 대상 배포를 위한 UI/UX를 구현합니다.
     * 표준 아티팩트를 VM에 SSH를 통해 배포하는 핵심 백엔드 로직을 개발합니다.
