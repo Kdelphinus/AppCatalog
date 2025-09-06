@@ -1,0 +1,74 @@
+# Docker Compose 파일 버전 정의
+version: '3.9'
+
+# services: 이 파일로 관리하고 실행할 컨테이너들의 목록
+services:
+  # PostgreSQL 데이터베이스 서비스
+  # AppCatalog 애플리케이션의 데이터를 저장합니다 (예: 배포 대상 목록, 배포 이력)
+  postgres-db:
+    image: postgres:14-alpine  # 가벼운 alpine 버전의 PostgreSQL 이미지를 사용
+    container_name: appcatalog-postgres
+    restart: always # Docker가 시작될 때 항상 이 컨테이너를 재시작
+    environment:
+      POSTGRES_USER: appcatalog_user
+      POSTGRES_PASSWORD: appcatalog_password
+      POSTGRES_DB: appcatalog_db
+    ports:
+      - "5432:5432" # 내 PC의 5432 포트와 컨테이너의 5432 포트를 연결
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # DB 데이터를 PC에 저장하여 컨테이너가 삭제돼도 데이터가 유지되도록 함
+
+  # Sonatype Nexus 서비스
+  # Java 라이브러리, Docker 이미지 등 모든 소프트웨어 자산을 저장하는 중앙 저장소
+  nexus:
+    image: sonatype/nexus3
+    container_name: appcatalog-nexus
+    restart: always
+    ports:
+      - "8081:8081" # Nexus UI에 접속하기 위한 포트
+    volumes:
+      - nexus-data:/nexus-data
+
+  # VM 배포 테스트를 위한 가상 VM (SSH 서버)
+  # AppCatalog가 SSH로 접속하여 배포를 테스트할 대상
+  virtual-vm:
+    image: linuxserver/openssh-server # SSH 서버 기능이 포함된 경량 리눅스 이미지
+    container_name: appcatalog-test-vm
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Seoul
+      - USER_NAME=testuser # SSH 접속 계정
+      - USER_PASSWORD=testpassword # SSH 접속 비밀번호
+    ports:
+      - "2222:2222" # 내 PC의 2222 포트와 컨테이너의 SSH 포트를 연결
+    depends_on: # 다른 서비스가 실행된 후에 실행되도록 순서 지정
+      - postgres-db
+      - nexus
+
+  # AppCatalog 애플리케이션
+  appcatalog-app:
+    build: . # 현재 디렉토리의 Dockerfile을 사용하여 이미지를 빌드
+    container_name: appcatalog-main-app
+    restart: always
+    ports:
+      - "8080:8080" # API 서버 포트
+    depends_on:
+      - postgres-db
+      - nexus
+      - virtual-vm
+    environment:
+      # Spring Boot 애플리케이션이 다른 컨테이너에 접속하기 위한 정보
+      # 'postgres-db', 'nexus', 'virtual-vm'은 컨테이너 이름이자 Docker 내부 네트워크의 호스트명(주소)이 됩니다.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/appcatalog_db
+      - SPRING_DATASOURCE_USERNAME=appcatalog_user
+      - SPRING_DATASOURCE_PASSWORD=appcatalog_password
+      # 나중에 AppCatalog가 Nexus나 VM에 접속할 때 사용할 주소
+      - NEXUS_URL=http://nexus:8081
+      - TEST_VM_HOST=virtual-vm
+
+# volumes: 컨테이너의 데이터를 영구적으로 저장하기 위한 공간 정의
+volumes:
+  postgres-data:
+  nexus-data:
