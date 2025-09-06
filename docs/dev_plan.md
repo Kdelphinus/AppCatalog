@@ -89,23 +89,30 @@ Nexus를 포괄적인 내부 미러 저장소로 구성하는 것은 프로젝�
 도메인 주도 설계를 따라 명확성과 유지보수성을 높인 계층형 아키텍처를 사용합니다.
 
 ```
-cmp.appcatalog
-├── AppcatalogApplication.java
-├── config/                  // Spring Security, Async, Swagger 등 설정
-├── error/                   // 전역 예외 처리, 커스텀 예외
-├── catalog/                 // Nexus 연동 로직
+com.appcatalog                # 최상위 패키지
+├── AppcatalogApplication.java  # 애플리케이션 시작점
+├── config/                   # Spring Security, 비동기 처리 등 각종 설정
+├── error/                    # 예외 처리 로직
+|
+├── target/                   # 🎯 '어디에' 배포할지 관리 (배포 대상)
+│   ├── TargetController.java   # (API 계층) HTTP 요청/응답 처리
+│   ├── TargetService.java      # (서비스 계층) 비즈니스 로직 처리
+│   └── domain/                 # (데이터 계층) DB와 통신 (Entity, Repository)
+│       ├── TargetEnvironment.java
+│       └── TargetEnvironmentRepository.java
+|
+├── catalog/                  # 📜 '무엇을' 배포할지 관리 (소프트웨어 목록)
 │   ├── CatalogController.java
 │   └── CatalogService.java
-├── deployment/              // 핵심 배포 로직
-│   ├── DeploymentController.java
-│   ├── DeploymentService.java
-│   ├── dto/                 // 데이터 전송 객체 (예: DeploymentRequest)
-│   ├── strategy/            // 배포 전략 (K8sDeployer, VmDeployer)
-│   └── domain/              // JPA 엔티티 및 리포지토리 (DeploymentJob)
-└── target/                  // 배포 대상 환경 관리
-    ├── TargetController.java
-    ├── TargetService.java
-    └── domain/              // JPA 엔티티 및 리포지토리 (TargetEnvironment)
+|
+└── deployment/               # 🚀 '배포 행위' 자체를 관리
+    ├── DeploymentController.java
+    ├── DeploymentService.java
+    ├── dto/                    # 계층 간 데이터 전송 객체
+    ├── strategy/               # K8s, VM 등 배포 방식에 따른 전략
+    └── domain/                 # 배포 작업(Job) 정보
+        ├── DeploymentJob.java
+        └── DeploymentJobRepository.java
 ```
 
 #### **5.2. API 명세 (초안)**
