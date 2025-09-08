@@ -5,11 +5,11 @@
 타입(Type): 제목(Subject)
 
 ```
-feat: 배포 대상(Target) 생성 API 구현
+[feat] 배포 대상(Target) 생성 API 구현
 ```
 
-
 ### 주요 타입(Type)
+
 - feat: 새로운 기능 추가 (a new feature)
 
 - fix: 버그 수정 (a bug fix)
