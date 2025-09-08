@@ -1,5 +1,6 @@
 package com.appcatalog.target;
 
+import com.appcatalog.error.TargetNotFoundException;
 import com.appcatalog.target.domain.TargetEnvironment;
 import com.appcatalog.target.domain.TargetEnvironmentRepository;
 import com.appcatalog.target.domain.TargetType;
@@ -108,7 +109,7 @@ class TargetServiceTest {
 
     // when & then
     assertThatThrownBy(() -> targetService.findTargetById(1L))
-        .isInstanceOf(RuntimeException.class)
+        .isInstanceOf(TargetNotFoundException.class)
         .hasMessage("Target not found with id: 1");
   }
 
@@ -158,7 +159,7 @@ class TargetServiceTest {
 
     // when & then
     assertThatThrownBy(() -> targetService.updateTarget(targetId, updatedDetails))
-        .isInstanceOf(RuntimeException.class)
+        .isInstanceOf(TargetNotFoundException.class)
         .hasMessage("Target not found with id: " + targetId);
   }
 
@@ -185,7 +186,7 @@ class TargetServiceTest {
 
     // when & then
     assertThatThrownBy(() -> targetService.deleteTarget(targetId))
-        .isInstanceOf(RuntimeException.class)
+        .isInstanceOf(TargetNotFoundException.class)
         .hasMessage("Target not found with id: " + targetId);
   }
 }
