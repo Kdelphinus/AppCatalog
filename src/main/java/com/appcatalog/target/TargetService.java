@@ -1,5 +1,6 @@
 package com.appcatalog.target;
 
+import com.appcatalog.error.TargetNotFoundException;
 import com.appcatalog.target.domain.TargetEnvironment;
 import com.appcatalog.target.domain.TargetEnvironmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class TargetService {
   public TargetEnvironment findTargetById(Long id) {
     return targetRepository
         .findById(id)
-        .orElseThrow(() -> new RuntimeException("Target not found with id: " + id));
+        .orElseThrow(() -> new TargetNotFoundException("Target not found with id: " + id));
   }
 
   /** 배포 대상 정보를 수정 (Update) ID에 해당하는 대상이 없으면 예외를 발생시키는 비즈니스 규칙 포함 */
@@ -51,7 +52,7 @@ public class TargetService {
   @Transactional // 데이터를 변경하므로 쓰기 가능 트랜잭션 적용
   public void deleteTarget(Long id) {
     if (!targetRepository.existsById(id)) {
-      throw new RuntimeException("Target not found with id: " + id);
+      throw new TargetNotFoundException("Target not found with id: " + id);
     }
     targetRepository.deleteById(id);
   }
