@@ -1,3 +1,7 @@
+# Docker 컨테이너 환경에서 사용할 Nexus 주소
+nexus:
+  api:
+    url: http://nexus:8081
 spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/catalog
