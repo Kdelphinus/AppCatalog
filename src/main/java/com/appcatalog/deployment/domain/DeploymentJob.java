@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "DEPLOYMENT_JOBS")
+@Setter // TODO 테스트를 위한 임시 추가
 @Getter
 public class DeploymentJob {
 
