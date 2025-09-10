@@ -1,13 +1,13 @@
-# Docker 컨테이너 환경에서 사용할 Nexus 주소
 nexus:
   api:
     url: http://nexus:8081
+
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/catalog
-    username: jpauser # ?? ?? ???
-    password: jpapassword # ?? ?? ????
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:postgresql://postgres-db:5432/appcatalog_db
+    username: appcatalog_user # docker-compose.yml에 설정된 POSTGRES_USER와 동일
+    password: appcatalog_password # docker-compose.yml에 설정된 POSTGRES_PASSWORD와 동일
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
