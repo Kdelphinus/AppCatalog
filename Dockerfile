@@ -1,5 +1,5 @@
 # 1. Java 17 환경을 기반으로 빌드 환경을 구성
-FROM openjdk:17-jdk-slim as builder
+FROM openjdk:17-alpine as builder
 
 # 작업 디렉토리 설정
 WORKDIR /workspace/app
@@ -17,7 +17,7 @@ COPY . /workspace/app/
 RUN ./gradlew build
 
 # 2. 실제 실행 환경 구성 (더 가벼운 이미지 사용)
-FROM openjdk:17-jre-slim
+FROM openjdk:17-alpine
 
 # 작업 디렉토리 설정
 WORKDIR /app

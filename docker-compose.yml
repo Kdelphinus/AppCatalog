@@ -38,6 +38,7 @@ services:
       - TZ=Asia/Seoul
       - USER_NAME=testuser # SSH 접속 계정
       - USER_PASSWORD=testpassword # SSH 접속 비밀번호
+      - PASSWORD_ACCESS=true # 비밀번호 인증 활성화
     ports:
       - "2222:2222" # 내 PC의 2222 포트와 컨테이너의 SSH 포트를 연결
     depends_on: # 다른 서비스가 실행된 후에 실행되도록 순서 지정
