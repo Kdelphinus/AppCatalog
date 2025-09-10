@@ -1,5 +1,6 @@
 package com.appcatalog.deployment.dto;
 
+import com.appcatalog.deployment.domain.DeploymentJob;
 import com.appcatalog.deployment.domain.DeploymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,15 @@ public class DeploymentResponse {
   private DeploymentStatus status;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+
+  public static DeploymentResponse fromEntity(DeploymentJob job) {
+    return new DeploymentResponse(
+        job.getId(),
+        job.getServiceName(),
+        job.getServiceVersion(),
+        job.getTargetId(),
+        job.getStatus(),
+        job.getCreatedAt(),
+        job.getUpdatedAt());
+  }
 }
