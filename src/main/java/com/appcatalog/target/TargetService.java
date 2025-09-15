@@ -1,5 +1,6 @@
 package com.appcatalog.target;
 
+import com.appcatalog.error.DataConflictException;
 import com.appcatalog.error.TargetNotFoundException;
 import com.appcatalog.target.domain.TargetEnvironment;
 import com.appcatalog.target.domain.TargetEnvironmentRepository;
@@ -19,6 +20,9 @@ public class TargetService {
   /** 새로운 배포 대상을 생성 (Create) */
   @Transactional // 데이터를 변경하므로 쓰기 가능 트랜잭션 적용
   public TargetEnvironment createTarget(TargetEnvironment target) {
+    if (targetRepository.existsByName(target.getName())) {
+      throw new DataConflictException("Target already exists with name: " + target.getName());
+    }
     return targetRepository.save(target);
   }
 
