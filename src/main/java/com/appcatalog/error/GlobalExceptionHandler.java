@@ -18,4 +18,9 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleJobNotFound(JobNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
+
+  @ExceptionHandler(DataConflictException.class)
+  public ResponseEntity<String> handleDataConflict(DataConflictException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+  }
 }
