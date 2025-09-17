@@ -47,7 +47,7 @@ public class TargetService {
     existingTarget.setType(updatedDetails.getType());
     existingTarget.setHost(updatedDetails.getHost());
     existingTarget.setPort(updatedDetails.getPort());
-    existingTarget.setCredentialId(updatedDetails.getCredentialId());
+    existingTarget.setCredential(updatedDetails.getCredential());
 
     return targetRepository.save(existingTarget);
   }

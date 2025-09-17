@@ -2,13 +2,31 @@ package com.appcatalog.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice // 이 클래스가 모든 컨트롤러의 예외를 담당
 public class GlobalExceptionHandler {
 
-  // TargetNotFoundException 이 들어오면, 이 메소드를 실행
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<Map<String, String>> handleValidationExceptions(
+      MethodArgumentNotValidException ex) {
+    Map<String, String> errors = new HashMap<>();
+    ex.getBindingResult()
+        .getFieldErrors()
+        .forEach(
+            error -> {
+              String fieldName = error.getField(); // 오류가 발생한 필드 이름
+              String errorMessage = error.getDefaultMessage(); // 오류 메시지
+              errors.put(fieldName, errorMessage);
+            });
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+  }
+
   @ExceptionHandler(TargetNotFoundException.class)
   public ResponseEntity<String> handleTargetNotFound(TargetNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

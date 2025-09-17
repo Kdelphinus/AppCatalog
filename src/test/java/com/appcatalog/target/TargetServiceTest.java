@@ -1,5 +1,6 @@
 package com.appcatalog.target;
 
+import com.appcatalog.credential.Credential;
 import com.appcatalog.error.TargetNotFoundException;
 import com.appcatalog.target.domain.TargetEnvironment;
 import com.appcatalog.target.domain.TargetEnvironmentRepository;
@@ -118,19 +119,23 @@ class TargetServiceTest {
     // given
     Long targetId = 1L;
     TargetEnvironment existingTarget = new TargetEnvironment();
+    Credential oldCredential =
+        Credential.builder().username("old_user").password("old_pass").build();
     existingTarget.setId(targetId);
     existingTarget.setName("Old Name");
     existingTarget.setType(TargetType.VM);
     existingTarget.setHost("old.host.com");
     existingTarget.setPort(8080);
-    existingTarget.setCredentialId("old_cred");
+    existingTarget.setCredential(oldCredential);
 
     TargetEnvironment updatedDetails = new TargetEnvironment();
+    Credential newCredential =
+        Credential.builder().username("new_user").password("new_pass").build();
     updatedDetails.setName("New Name");
     updatedDetails.setType(TargetType.KUBERNETES);
     updatedDetails.setHost("new.host.com");
     updatedDetails.setPort(9090);
-    updatedDetails.setCredentialId("new_cred");
+    updatedDetails.setCredential(newCredential);
 
     given(targetRepository.findById(targetId)).willReturn(Optional.of(existingTarget));
     given(targetRepository.save(any(TargetEnvironment.class))).willReturn(existingTarget);
@@ -145,7 +150,10 @@ class TargetServiceTest {
     assertThat(result.getType()).isEqualTo(updatedDetails.getType());
     assertThat(result.getHost()).isEqualTo(updatedDetails.getHost());
     assertThat(result.getPort()).isEqualTo(updatedDetails.getPort());
-    assertThat(result.getCredentialId()).isEqualTo(updatedDetails.getCredentialId());
+    assertThat(result.getCredential().getUsername())
+        .isEqualTo(updatedDetails.getCredential().getUsername());
+    assertThat(result.getCredential().getPassword())
+        .isEqualTo(updatedDetails.getCredential().getPassword());
   }
 
   @DisplayName("존재하지 않는 ID로 Target을 수정하면, 예외를 던진다.")
