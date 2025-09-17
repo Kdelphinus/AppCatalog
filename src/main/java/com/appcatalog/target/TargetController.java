@@ -1,6 +1,8 @@
 package com.appcatalog.target;
 
 import com.appcatalog.target.domain.TargetEnvironment;
+import com.appcatalog.target.dto.TargetRequestDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,9 @@ public class TargetController {
 
   // --- 생성 API ---
   @PostMapping
-  public ResponseEntity<TargetEnvironment> createTarget(@RequestBody TargetEnvironment newTarget) {
-    TargetEnvironment createdTarget = targetService.createTarget(newTarget);
+  public ResponseEntity<TargetEnvironment> createTarget(
+      @RequestBody @Valid TargetRequestDto newTarget) {
+    TargetEnvironment createdTarget = targetService.createTarget(newTarget.toEntity());
     return ResponseEntity.status(HttpStatus.CREATED).body(createdTarget); // 201 Created
   }
 
@@ -38,8 +41,8 @@ public class TargetController {
   // --- 수정 API ---
   @PutMapping("/{id}")
   public ResponseEntity<TargetEnvironment> updateTargetById(
-      @PathVariable Long id, @RequestBody TargetEnvironment updatedTarget) {
-    TargetEnvironment target = targetService.updateTarget(id, updatedTarget);
+      @PathVariable Long id, @RequestBody @Valid TargetRequestDto updatedTarget) {
+    TargetEnvironment target = targetService.updateTarget(id, updatedTarget.toEntity());
     return ResponseEntity.ok(target); // 200 OK
   }
 
