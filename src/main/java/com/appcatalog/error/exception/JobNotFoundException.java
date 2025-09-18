@@ -1,4 +1,4 @@
-package com.appcatalog.error;
+package com.appcatalog.error.exception;
 
 public class JobNotFoundException extends RuntimeException {
   public JobNotFoundException(String message) {

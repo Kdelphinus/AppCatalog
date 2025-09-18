@@ -1,7 +1,7 @@
 package com.appcatalog.target;
 
 import com.appcatalog.credential.Credential;
-import com.appcatalog.error.TargetNotFoundException;
+import com.appcatalog.error.exception.TargetNotFoundException;
 import com.appcatalog.target.domain.TargetEnvironment;
 import com.appcatalog.target.domain.TargetEnvironmentRepository;
 import com.appcatalog.target.domain.TargetType;

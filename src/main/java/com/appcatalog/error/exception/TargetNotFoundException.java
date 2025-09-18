@@ -1,4 +1,4 @@
-package com.appcatalog.error;
+package com.appcatalog.error.exception;
 
 public class TargetNotFoundException extends RuntimeException {
   public TargetNotFoundException(String message) {
